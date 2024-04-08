@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">yt-dlp Android</string>
+    <string name="tab_downloader">Download</string>
+    <string name="tab_videos">Library</string>
+    <string name="tab_settings">Settings</string>
+    <string name="download_video_hint">Paste video link here!</string>
+    <string name="download_video_play">Play</string>
+    <string name="download_video">Download</string>
+    <string name="download_best_video">Download best video</string>
+    <string name="download_best_audio">Download best audio</string>
+    <string name="download_progress_size">File size</string>
+    <string name="download_progress_resolution">Resolution</string>
+    <string name="download_progress_format">Format</string>
+    <string name="download_video_find">Find Video</string>
+    <string name="download_video_clear">Clear Video</string>
+    <string name="download_progress">Downloaded</string>
+    <string name="download_stop">Stop Download</string>
+    <string name="download_completed">Download completed!</string>
+    <string name="download_stopped">Download Terminated!</string>
+</resources>
