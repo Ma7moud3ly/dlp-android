@@ -1,4 +1,4 @@
-# YT-DLP Android  <img src = "images/logo.png" width = "70" />
+# <img src = "images/logo.png" width = "40" /> YT-DLP Android
 #### Android user interface for [yt-dlp](https://github.com/yt-dlp/yt-dlp). 
 > yt-dlp is a feature-rich command-line audio/video downloader with support for thousands of sites.
 
@@ -8,11 +8,11 @@
 <div>
 <img src = "images/screens/screen1.jpg" width = "250" />
 &nbsp;&nbsp;&nbsp;
-<img src = "iimages/screens/screen2.jpg" width = "250" />
+<img src = "images/screens/screen2.jpg" width = "250" />
 </div>
 <br>
 <div>
-<img src = "images/screens/screen3.jpg.jpg" width = "250" />
+<img src = "images/screens/screen3.jpg" width = "250" />
 &nbsp;&nbsp;&nbsp;
 <img src = "images/screens/screen4.jpg" width = "250" />
 </div>
