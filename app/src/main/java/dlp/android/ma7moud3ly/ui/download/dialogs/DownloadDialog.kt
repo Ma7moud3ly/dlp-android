@@ -1,19 +1,15 @@
-package dlp.android.ma7moud3ly.ui.downloader
+package dlp.android.ma7moud3ly.ui.download.dialogs
 
 import ButtonSmall
 import android.util.Log
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -35,10 +30,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import dlp.android.ma7moud3ly.DownloadProgress
-import dlp.android.ma7moud3ly.MediaFormat
-import dlp.android.ma7moud3ly.MediaInfo
 import dlp.android.ma7moud3ly.R
+import dlp.android.ma7moud3ly.data.DownloadProgress
+import dlp.android.ma7moud3ly.data.MediaFormat
+import dlp.android.ma7moud3ly.data.MediaInfo
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -53,7 +48,7 @@ private fun DownloadProgressDialogPreview() {
     val format = MediaFormat(
         resolution = "256x144",
         ext = "MP4",
-        fileSize = "0" //"8388608"
+        fileSize = "8388608"
     )
     val mediaInfo = MediaInfo(title = "My Test Video")
     var progress by remember { mutableStateOf(DownloadProgress()) }
@@ -61,12 +56,11 @@ private fun DownloadProgressDialogPreview() {
         for (i in 1..100) {
             delay(1000)
             val downloaded = 1.0 * i
-            val total = 30.0
-            //val percent = "%.2f".format(downloaded / total * 100).toFloatOrNull() ?: 0f
-            val percent = 0f
+            val size = 30.0
+            val percent = "%.2f".format(downloaded / size * 100).toFloatOrNull() ?: 0f
             progress = DownloadProgress(
                 downloaded = downloaded,
-                size = 0.0,
+                size = size,
                 percent = percent
             )
         }
@@ -75,7 +69,7 @@ private fun DownloadProgressDialogPreview() {
     AppTheme {
 
         Surface(color = Color.White) {
-            DownloadProgressDialog(
+            DownloadDialog(
                 mediaFormat = { format },
                 mediaInfo = { mediaInfo },
                 downloadProgress = { progress },
@@ -86,7 +80,7 @@ private fun DownloadProgressDialogPreview() {
 }
 
 @Composable
-fun DownloadProgressDialog(
+fun DownloadDialog(
     mediaFormat: () -> MediaFormat?,
     mediaInfo: () -> MediaInfo?,
     downloadProgress: () -> DownloadProgress,
@@ -148,9 +142,12 @@ fun DownloadProgressDialog(
                     )
                     FormatDetails(
                         title = R.string.download_progress_format,
-                        value = format.ext + " - " + format.formatNote
+                        value = format.ext +
+                                if (format.formatNote.isNotEmpty())
+                                    " - " + format.formatNote
+                                else ""
                     )
-                    FormatDetails(
+                    if (format.resolution.isNotBlank()) FormatDetails(
                         title = R.string.download_progress_resolution,
                         value = format.resolution
                     )
@@ -211,32 +208,3 @@ private fun FormatDetails(@StringRes title: Int, value: Any) {
     }
 }
 
-
-@Composable
-fun LoadingDialog(
-    show: () -> Boolean,
-    background: Color = Color.Transparent,
-    dismissOnBackPress: Boolean = false,
-    dismissOnClickOutside: Boolean = false
-) {
-    if (show()) Dialog(
-        onDismissRequest = {},
-        properties = DialogProperties(
-            dismissOnBackPress = dismissOnBackPress,
-            dismissOnClickOutside = dismissOnClickOutside
-        )
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = background)
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp),
-                color = MaterialTheme.colorScheme.tertiary
-            )
-        }
-
-    }
-}

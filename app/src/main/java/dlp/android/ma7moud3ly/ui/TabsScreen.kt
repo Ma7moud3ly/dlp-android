@@ -2,7 +2,10 @@ package dlp.android.ma7moud3ly.ui
 
 import DownloaderScreen
 import SettingsScreen
-import VideosScreen
+import LibraryScreen
+import android.util.Log
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,20 +33,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dlp.android.ma7moud3ly.MyTab
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dlp.android.ma7moud3ly.MainActivity
+import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 
-private const val TAG = "TabsScreen"
+private const val TAG = "HomeScreen"
 
 @Preview
 @Composable
-private fun TabsScreenPreview() {
+private fun HomeScreenPreview() {
     AppTheme {
         HomeScreen()
     }
@@ -52,11 +58,26 @@ private fun TabsScreenPreview() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen() {
+    val activity = LocalContext.current as MainActivity
+    val viewModel: MainViewModel = viewModel(activity)
     val snackarHostState = remember { SnackbarHostState() }
-    var selectedTab by remember { mutableStateOf(appTabs[1]) }
-    val pagerState = rememberPagerState(
-        pageCount = { appTabs.size }
-    )
+    var selectedTab by remember { mutableStateOf(appTabs[0]) }
+    val pagerState = rememberPagerState(pageCount = { appTabs.size })
+
+    LaunchedEffect(Unit) {
+        viewModel.snackbarMessage.collect { msg ->
+            Log.i(TAG, "snackbarMessage")
+            snackarHostState.showSnackbar(msg)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.selectedTabIndex.collect { index ->
+            Log.i(TAG, "selectedTabIndex - $index")
+            pagerState.scrollToPage(index)
+        }
+    }
+
     LaunchedEffect(pagerState.settledPage) {
         selectedTab = when (pagerState.settledPage) {
             0 -> appTabs[0]
@@ -83,7 +104,7 @@ fun HomeScreen() {
                 .fillMaxSize()
         ) {
             HorizontalPager(state = pagerState, userScrollEnabled = false) {
-                selectedTab.screen(snackarHostState)
+                selectedTab.screen()
             }
         }
     }
@@ -156,13 +177,13 @@ private val appTabs = listOf(
         id = 0,
         title = R.string.tab_downloader,
         icon = R.drawable.download,
-        screen = { DownloaderScreen(it) }
+        screen = { DownloaderScreen() }
     ),
     MyTab(
         id = 1,
         title = R.string.tab_videos,
         icon = R.drawable.videos,
-        screen = { VideosScreen() }
+        screen = { LibraryScreen() }
     ),
     MyTab(
         id = 2,
@@ -170,4 +191,11 @@ private val appTabs = listOf(
         icon = R.drawable.settings,
         screen = { SettingsScreen() }
     )
+)
+
+data class MyTab(
+    val id: Int,
+    @StringRes val title: Int,
+    @DrawableRes val icon: Int,
+    val screen: @Composable () -> Unit
 )

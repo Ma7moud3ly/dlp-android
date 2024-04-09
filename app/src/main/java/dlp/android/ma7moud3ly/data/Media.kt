@@ -1,19 +1,12 @@
-package dlp.android.ma7moud3ly
+package dlp.android.ma7moud3ly.data
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.Composable
 import com.google.gson.annotations.SerializedName
 
 val Int.toMega get() = "%.2f".format(this / 1024.0 / 1024.0).toDoubleOrNull() ?: 0.0
 
-data class DownloadProgress(
-    val downloaded: Double = 0.0,
-    val size: Double = 0.0,
-    val percent: Float = 0f
-)
-
+/**
+ * Details about a video/audio extracted by yt-dlp
+ */
 data class MediaInfo(
     @SerializedName("url") val url: String = "",
     @SerializedName("title") val title: String = "",
@@ -35,21 +28,4 @@ data class MediaFormat(
         val size = fileSize.toIntOrNull() ?: return null
         return size.toMega
     }
-}
-
-
-data class MyTab(
-    val id: Int,
-    @StringRes val title: Int,
-    @DrawableRes val icon: Int,
-    val screen: @Composable (SnackbarHostState) -> Unit
-)
-
-sealed class DownloadEvents {
-    data class OnOpen(val url: String) : DownloadEvents()
-    data class OnInfo(val url: String) : DownloadEvents()
-    data class OnPlay(val format: MediaFormat) : DownloadEvents()
-    data class OnDownload(val format: MediaFormat) : DownloadEvents()
-    data object OnStopDownload : DownloadEvents()
-    data object OnClearMedia : DownloadEvents()
 }

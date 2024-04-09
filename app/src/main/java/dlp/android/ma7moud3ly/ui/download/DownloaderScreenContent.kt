@@ -2,8 +2,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,15 +55,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import dlp.android.ma7moud3ly.DownloadEvents
-import dlp.android.ma7moud3ly.DownloadProgress
-import dlp.android.ma7moud3ly.MediaFormat
-import dlp.android.ma7moud3ly.MediaInfo
 import dlp.android.ma7moud3ly.R
+import dlp.android.ma7moud3ly.data.DownloadEvents
+import dlp.android.ma7moud3ly.data.DownloadProgress
+import dlp.android.ma7moud3ly.data.MediaFormat
+import dlp.android.ma7moud3ly.data.MediaInfo
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
-import dlp.android.ma7moud3ly.ui.downloader.DownloadProgressDialog
-import dlp.android.ma7moud3ly.ui.downloader.LoadingDialog
+import dlp.android.ma7moud3ly.ui.download.dialogs.DownloadDialog
+import dlp.android.ma7moud3ly.ui.download.dialogs.ProgressDialog
 import java.util.Locale
 
 @Preview(showSystemUi = true)
@@ -117,7 +115,6 @@ fun DownloaderScreenContent(
     action: (DownloadEvents) -> Unit
 ) {
     var expandDetails by remember { mutableStateOf(true) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -127,7 +124,7 @@ fun DownloaderScreenContent(
             mediaInfo = mediaInfo,
             onEnter = { action(DownloadEvents.OnInfo(it)) }
         )
-        Spacer(modifier = Modifier.height(16.dp))
+
         SectionVideoDetails(
             mediaInfo = mediaInfo,
             expandDetails = { expandDetails },
@@ -143,8 +140,8 @@ fun DownloaderScreenContent(
         )
     }
 
-    LoadingDialog(show = isLoading)
-    DownloadProgressDialog(
+    ProgressDialog(show = isLoading)
+    DownloadDialog(
         mediaInfo = mediaInfo,
         mediaFormat = selectedFormat,
         downloadProgress = downloadProgress,
@@ -173,82 +170,84 @@ private fun SectionVideoUrl(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.logo),
                             contentDescription = stringResource(id = R.string.app_name),
                             modifier = Modifier
                                 .size(70.dp)
-                                .clip(CircleShape),
+                                .clip(CircleShape)
+
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = stringResource(id = R.string.app_name),
+                            text = stringResource(id = R.string.app_name).uppercase(),
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.secondary,
-                            textAlign = TextAlign.Start,
-                            modifier = Modifier.weight(1f)
+                            color = MaterialTheme.colorScheme.secondary
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedTextField(
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.surface)
-                            .border(1.dp, borderColor),
-                    ) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = stringResource(id = R.string.download_video_hint),
-                            tint = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.size(30.dp)
-                        )
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .weight(1f)
-                                .focusRequester(focusRequester),
-                            value = query,
-                            singleLine = false,
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-                            keyboardActions = KeyboardActions(
-                                onGo = {
-                                    onEnter(query)
-                                    focusManager.clearFocus(true)
-                                }
-                            ),
-                            onValueChange = { query = it },
-                            placeholder = {
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
+                        value = query,
+                        singleLine = false,
+                        shape = RoundedCornerShape(16.dp),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
+                        keyboardActions = KeyboardActions(
+                            onGo = {
+                                onEnter(query)
+                                focusManager.clearFocus(true)
+                            }
+                        ),
+                        onValueChange = { query = it },
+                        placeholder = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = stringResource(id = R.string.download_video_hint),
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
                                 Text(
                                     text = stringResource(id = R.string.download_video_hint),
-                                    style = MaterialTheme.typography.bodyLarge,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.secondary
                                 )
-                            },
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedTextColor = MaterialTheme.colorScheme.secondary,
-                                focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent,
-                                focusedBorderColor = Color.Transparent,
-                                unfocusedBorderColor = Color.Transparent,
-                            ),
-                            textStyle = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            }
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.secondary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.tertiary,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = borderColor,
+                        ),
+                        textStyle = MaterialTheme.typography.bodySmall
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         ButtonSmall(
                             text = stringResource(id = R.string.download_video_find),
                             onClick = { onEnter(query) },
-                            enabled = { query.isNotBlank() }
+                            enabled = { query.isNotBlank() },
+                            background = Color.White,
+                            color = MaterialTheme.colorScheme.secondary,
+                            border = BorderStroke(1.dp, borderColor),
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
                         ButtonSmall(
                             text = stringResource(id = R.string.download_video_clear),
                             color = MaterialTheme.colorScheme.secondary,
@@ -274,24 +273,19 @@ private fun SectionVideoDetails(
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.clickable(onClick = onClearMedia)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.close),
+                painter = painterResource(id = R.drawable.back),
                 contentDescription = "",
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier
-                    .clickable(onClick = onClearMedia)
-                    .size(24.dp)
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
             )
             Text(
-                text = info.url,
-                color = MaterialTheme.colorScheme.secondary,
-                textDecoration = TextDecoration.Underline,
+                text = stringResource(id = R.string.download_back),
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.clickable { onOpenMedia(info.url) }
+                color = MaterialTheme.colorScheme.primary
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -316,13 +310,17 @@ private fun SectionVideoDetails(
                             .height(150.dp)
                     )
                 }
+
                 Text(
                     text = info.title,
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 2,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onOpenMedia(info.url) },
+                    maxLines = 4,
                     fontWeight = FontWeight.Medium,
+                    textDecoration = TextDecoration.Underline,
                     overflow = TextOverflow.Ellipsis
                 )
                 if (info.description.isNotEmpty() && expandDetails()) Text(
@@ -330,7 +328,7 @@ private fun SectionVideoDetails(
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.fillMaxWidth(),
-                    maxLines = 5,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Light,
                 )
@@ -394,7 +392,7 @@ private fun ItemVideoFormat(
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Text(
+                if (info.resolution.isNotEmpty()) Text(
                     text = " - ${info.resolution}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.bodyMedium

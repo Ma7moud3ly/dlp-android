@@ -1,7 +1,6 @@
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -11,13 +10,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dlp.android.ma7moud3ly.DownloadEvents
-import dlp.android.ma7moud3ly.DownloadManager
-import dlp.android.ma7moud3ly.DownloadProgress
 import dlp.android.ma7moud3ly.MainActivity
 import dlp.android.ma7moud3ly.MainViewModel
-import dlp.android.ma7moud3ly.MediaFormat
 import dlp.android.ma7moud3ly.R
+import dlp.android.ma7moud3ly.data.DownloadEvents
+import dlp.android.ma7moud3ly.data.DownloadProgress
+import dlp.android.ma7moud3ly.data.MediaFormat
+import dlp.android.ma7moud3ly.managers.DownloadManager
+import dlp.android.ma7moud3ly.managers.LibraryManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 private const val TAG = "DownloaderScreen"
 
 @Composable
-fun DownloaderScreen(snackbarHostState: SnackbarHostState) {
+fun DownloaderScreen() {
     val activity = LocalContext.current as MainActivity
     val viewModel: MainViewModel = viewModel(activity)
     val coroutineScope = rememberCoroutineScope()
@@ -47,15 +47,21 @@ fun DownloaderScreen(snackbarHostState: SnackbarHostState) {
             Log.e(TAG, "errorFlow - $msg")
             isLoading = false
             delay(500)
-            snackbarHostState.showSnackbar(msg)
+            viewModel.snackbarMessage.emit(msg)
         }
     }
 
     LaunchedEffect(Unit) {
-        downloadManager.downloadCompleteFlow.collect {
+        downloadManager.downloadCompleteFlow.collect { done ->
+            if (done != true) return@collect
             Log.v(TAG, "downloadCompleteFlow..")
             selectedFormat = null
-            snackbarHostState.showSnackbar(activity.getString(R.string.download_completed))
+            with(viewModel) {
+                snackbarMessage.emit(activity.getString(R.string.download_completed))
+                downloadList.clear()
+                selectedTabIndex.emit(1)
+            }
+            downloadManager.downloadCompleteFlow.emit(null)
         }
     }
 
@@ -66,6 +72,7 @@ fun DownloaderScreen(snackbarHostState: SnackbarHostState) {
         coroutineScope.launch {
             downloadManager.download(
                 url = mediaInfo?.url.orEmpty(),
+                title = mediaInfo?.title.orEmpty(),
                 formatId = format.formatId
             )
         }
@@ -87,6 +94,9 @@ fun DownloaderScreen(snackbarHostState: SnackbarHostState) {
                 isLoading = true
                 coroutineScope.launch {
                     mediaInfo = downloadManager.getMediaInfo(url)
+                    mediaInfo?.let { info ->
+                        LibraryManager.instance.saveMediaInfo(info)
+                    }
                     isLoading = false
                 }
             }
@@ -103,18 +113,21 @@ fun DownloaderScreen(snackbarHostState: SnackbarHostState) {
                 }
                 coroutineScope.launch {
                     delay(1000)
-                    snackbarHostState.showSnackbar(activity.getString(R.string.download_stopped))
+                    viewModel.snackbarMessage.emit(activity.getString(R.string.download_stopped))
                 }
             }
 
             is DownloadEvents.OnPlay -> {
-
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(it.format.mediaLink)
+                }
+                activity.startActivity(intent)
             }
 
             is DownloadEvents.OnClearMedia -> {
                 selectedFormat = null
                 mediaInfo = null
-                downloadManager.clearMediaInfo()
+                LibraryManager.instance.clearMediaInfo()
             }
         }
     }
@@ -127,4 +140,3 @@ fun DownloaderScreen(snackbarHostState: SnackbarHostState) {
         action = action
     )
 }
-

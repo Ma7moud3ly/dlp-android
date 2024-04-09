@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.chaquo.python)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -21,7 +23,6 @@ android {
         }
 
         ndk {
-            // On Apple silicon, you can omit x86_64.
             abiFilters += listOf("arm64-v8a", "x86_64")
         }
 
@@ -45,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.compose.compiler.get().version.toString()
@@ -59,7 +61,7 @@ android {
 chaquopy {
     defaultConfig {
         buildPython("C:/Program Files/Python/python311/python.exe")
-        version="3.11"
+        version = "3.11"
 
         pip {
             install("yt-dlp")
@@ -71,16 +73,22 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.core.splashscreen)
+
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.google.gson)
     implementation(libs.coil)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    implementation(libs.google.gson)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.analytics.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
