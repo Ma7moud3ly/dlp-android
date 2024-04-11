@@ -23,6 +23,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.attribute.BasicFileAttributes
 
 /**
  * Manages downloads functionalities such as saving and restoring media information,
@@ -125,6 +127,13 @@ class LibraryManager private constructor(
             .map { f ->
                 DownloadInfo(file = f, thumbnail = getVideoThumbnail(f.path))
             }
+            .sortedByDescending {
+                Files.readAttributes(
+                    it.file.toPath(),
+                    BasicFileAttributes::class.java
+                ).lastAccessTime().toMillis()
+            }
+
     }
 
     /**
@@ -258,7 +267,7 @@ class LibraryManager private constructor(
                 putExtra(Intent.EXTRA_STREAM, fileUri)
                 setType(type)
             } else if (action == Intent.ACTION_VIEW) {
-                setDataAndType(fileUri, type);
+                setDataAndType(fileUri, type)
             }
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
@@ -275,7 +284,7 @@ class LibraryManager private constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ThumbnailUtils.createVideoThumbnail(
                     File(filePath),
-                    Size(120, 120),
+                    Size(512, 512),
                     null
                 )
             } else {

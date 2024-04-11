@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui.download.dialogs
+package dlp.android.ma7moud3ly.ui.home.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui.library.menus
+package dlp.android.ma7moud3ly.ui.downloads.menus
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 @Composable
 private fun MediaDropdownMenuPreview() {
     AppTheme {
-        LibraryDropdownMenu(
+        DownloadsDropdownMenu(
             expanded = { true }
         )
     }
@@ -30,7 +30,7 @@ private fun MediaDropdownMenuPreview() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LibraryDropdownMenu(
+fun DownloadsDropdownMenu(
     onDismiss: () -> Unit = {},
     expanded: () -> Boolean = { false },
     onDeleteAll: () -> Unit = {}
@@ -54,7 +54,7 @@ fun LibraryDropdownMenu(
                 .padding(16.dp)
         ) {
             ItemOptionMenu(
-                title = R.string.library_delete_all,
+                title = R.string.downloads_delete_all,
                 icon = R.drawable.delete,
                 onClick = {
                     onDeleteAll()

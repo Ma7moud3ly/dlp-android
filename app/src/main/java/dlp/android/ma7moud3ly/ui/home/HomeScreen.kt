@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dlp.android.ma7moud3ly.MainActivity
 import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadEvents
+import dlp.android.ma7moud3ly.data.HomeEvents
 import dlp.android.ma7moud3ly.data.DownloadProgress
 import dlp.android.ma7moud3ly.data.MediaFormat
 import dlp.android.ma7moud3ly.managers.DownloadManager
@@ -22,10 +22,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-private const val TAG = "DownloaderScreen"
+private const val TAG = "HomeScreen"
 
 @Composable
-fun DownloaderScreen() {
+fun HomeScreen() {
     val activity = LocalContext.current as MainActivity
     val viewModel: MainViewModel = viewModel(activity)
     val coroutineScope = rememberCoroutineScope()
@@ -65,7 +65,7 @@ fun DownloaderScreen() {
         }
     }
 
-    fun downloadMedia(format: MediaFormat) {
+    fun downloadMedia(format: MediaFormat, bestQuality: Boolean = false) {
         Log.i(TAG, "downloadMedia - ${format.formatId}")
         selectedFormat = format
         downloadProgress = DownloadProgress()
@@ -73,22 +73,22 @@ fun DownloaderScreen() {
             downloadManager.download(
                 url = mediaInfo?.url.orEmpty(),
                 title = mediaInfo?.title.orEmpty(),
-                formatId = format.formatId
+                formatId = if (bestQuality) "" else format.formatId
             )
         }
     }
 
 
-    val action: (DownloadEvents) -> Unit = {
+    val action: (HomeEvents) -> Unit = {
         when (it) {
-            is DownloadEvents.OnOpen -> {
+            is HomeEvents.OnOpen -> {
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse(it.url)
                 }
                 activity.startActivity(intent)
             }
 
-            is DownloadEvents.OnInfo -> {
+            is HomeEvents.OnInfo -> {
                 val url = it.url
                 Log.i(TAG, "OnInfo - $url")
                 isLoading = true
@@ -101,11 +101,18 @@ fun DownloaderScreen() {
                 }
             }
 
-            is DownloadEvents.OnDownload -> {
+            is HomeEvents.OnDownload -> {
                 downloadMedia(it.format)
             }
 
-            is DownloadEvents.OnStopDownload -> {
+            is HomeEvents.OnDownloadBest -> {
+                mediaInfo?.formats?.getOrNull(0)?.let { bestFormat ->
+                    downloadMedia(format = bestFormat, bestQuality = true)
+                }
+            }
+
+
+            is HomeEvents.OnStopDownload -> {
                 coroutineScope.launch {
                     downloadManager.terminateExecution()
                     Log.v(TAG, "onDownloadCancelled..")
@@ -117,14 +124,14 @@ fun DownloaderScreen() {
                 }
             }
 
-            is DownloadEvents.OnPlay -> {
+            is HomeEvents.OnPlay -> {
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse(it.format.mediaLink)
                 }
                 activity.startActivity(intent)
             }
 
-            is DownloadEvents.OnClearMedia -> {
+            is HomeEvents.OnClearMedia -> {
                 selectedFormat = null
                 mediaInfo = null
                 LibraryManager.instance.clearMediaInfo()
@@ -132,7 +139,7 @@ fun DownloaderScreen() {
         }
     }
 
-    DownloaderScreenContent(
+    HomeScreenContent(
         isLoading = { isLoading },
         mediaInfo = { mediaInfo },
         selectedFormat = { selectedFormat },

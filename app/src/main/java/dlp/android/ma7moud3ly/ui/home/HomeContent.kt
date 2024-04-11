@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -56,14 +56,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadEvents
 import dlp.android.ma7moud3ly.data.DownloadProgress
+import dlp.android.ma7moud3ly.data.HomeEvents
 import dlp.android.ma7moud3ly.data.MediaFormat
 import dlp.android.ma7moud3ly.data.MediaInfo
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
-import dlp.android.ma7moud3ly.ui.download.dialogs.DownloadDialog
-import dlp.android.ma7moud3ly.ui.download.dialogs.ProgressDialog
+import dlp.android.ma7moud3ly.ui.home.dialogs.DownloadDialog
+import dlp.android.ma7moud3ly.ui.home.dialogs.ProgressDialog
 import java.util.Locale
 
 @Preview(showSystemUi = true)
@@ -95,7 +95,7 @@ private fun DownloaderScreenPreview() {
         description = "test video description"
     )
     AppTheme {
-        DownloaderScreenContent(
+        HomeScreenContent(
             mediaInfo = { mediaInfo },
             isLoading = { false },
             selectedFormat = { null },
@@ -107,12 +107,12 @@ private fun DownloaderScreenPreview() {
 
 
 @Composable
-fun DownloaderScreenContent(
+fun HomeScreenContent(
     isLoading: () -> Boolean,
     mediaInfo: () -> MediaInfo?,
     downloadProgress: () -> DownloadProgress,
     selectedFormat: () -> MediaFormat?,
-    action: (DownloadEvents) -> Unit
+    action: (HomeEvents) -> Unit
 ) {
     var expandDetails by remember { mutableStateOf(true) }
     Column(
@@ -122,20 +122,21 @@ fun DownloaderScreenContent(
     ) {
         SectionVideoUrl(
             mediaInfo = mediaInfo,
-            onEnter = { action(DownloadEvents.OnInfo(it)) }
+            onEnter = { action(HomeEvents.OnInfo(it)) }
         )
 
         SectionVideoDetails(
             mediaInfo = mediaInfo,
             expandDetails = { expandDetails },
-            onClearMedia = { action(DownloadEvents.OnClearMedia) },
-            onOpenMedia = { action(DownloadEvents.OnOpen(it)) }
+            onClearMedia = { action(HomeEvents.OnClearMedia) },
+            onDownloadBest = { action(HomeEvents.OnDownloadBest) },
+            onOpenMedia = { action(HomeEvents.OnOpen(it)) },
         )
         Spacer(modifier = Modifier.height(8.dp))
         SectionVideoFormats(
             formats = { mediaInfo()?.formats.orEmpty() },
-            onDownload = { action(DownloadEvents.OnDownload(it)) },
-            onPlay = { action(DownloadEvents.OnPlay(it)) },
+            onDownload = { action(HomeEvents.OnDownload(it)) },
+            onPlay = { action(HomeEvents.OnPlay(it)) },
             onScrollChanges = { expandDetails = it }
         )
     }
@@ -145,7 +146,7 @@ fun DownloaderScreenContent(
         mediaInfo = mediaInfo,
         mediaFormat = selectedFormat,
         downloadProgress = downloadProgress,
-        onStopDownload = { action(DownloadEvents.OnStopDownload) }
+        onStopDownload = { action(HomeEvents.OnStopDownload) }
     )
 }
 
@@ -267,6 +268,7 @@ private fun SectionVideoDetails(
     expandDetails: () -> Boolean,
     mediaInfo: () -> MediaInfo?,
     onOpenMedia: (String) -> Unit,
+    onDownloadBest: () -> Unit,
     onClearMedia: () -> Unit
 ) {
     val info = mediaInfo() ?: return
@@ -299,7 +301,7 @@ private fun SectionVideoDetails(
             ) {
                 AnimatedVisibility(visible = expandDetails()) {
                     Image(
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Crop,
                         painter = rememberAsyncImagePainter(
                             model = info.thumbnail,
                             placeholder = painterResource(R.drawable.logo)
@@ -310,7 +312,15 @@ private fun SectionVideoDetails(
                             .height(150.dp)
                     )
                 }
-
+                ButtonSmall(
+                    text = stringResource(id = R.string.download_best_quality),
+                    color = Color.White,
+                    background = MaterialTheme.colorScheme.primary,
+                    onClick = onDownloadBest,
+                    icon = R.drawable.download,
+                    height = 40.dp,
+                    fillMaxWidth = true
+                )
                 Text(
                     text = info.title,
                     color = MaterialTheme.colorScheme.secondary,
@@ -407,7 +417,7 @@ private fun ItemVideoFormat(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ButtonSmall(
-                    text = stringResource(id = R.string.download_video),
+                    text = stringResource(id = R.string.download),
                     background = Color.Transparent,
                     color = MaterialTheme.colorScheme.secondary,
                     border = BorderStroke(1.dp, borderColor),
@@ -415,7 +425,7 @@ private fun ItemVideoFormat(
                     icon = R.drawable.download
                 )
                 ButtonSmall(
-                    text = stringResource(id = R.string.download_video_play),
+                    text = stringResource(id = R.string.download_preview),
                     background = Color.Transparent,
                     color = MaterialTheme.colorScheme.secondary,
                     border = BorderStroke(1.dp, borderColor),
@@ -437,13 +447,17 @@ fun ButtonSmall(
     border: BorderStroke? = null,
     height: Dp = 30.dp,
     enabled: () -> Boolean = { true },
+    fillMaxWidth: Boolean = false,
     background: Color = MaterialTheme.colorScheme.primary,
 ) {
     Surface(
         color = background,
         modifier = Modifier
             .height(height)
-            .wrapContentWidth()
+            .then(
+                if (fillMaxWidth) Modifier.fillMaxSize()
+                else Modifier.width(IntrinsicSize.Max)
+            )
             .then(modifier),
         shape = RoundedCornerShape(8.dp),
         border = border,
@@ -460,9 +474,12 @@ fun ButtonSmall(
             Text(
                 text,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp),
                 textAlign = TextAlign.Center,
-                color = color
+                color = color,
+                minLines = 1
             )
             icon?.let {
                 Icon(

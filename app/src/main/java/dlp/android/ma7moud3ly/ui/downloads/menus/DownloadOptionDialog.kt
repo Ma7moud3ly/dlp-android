@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui.library.menus
+package dlp.android.ma7moud3ly.ui.downloads.menus
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -69,7 +69,7 @@ fun DownloadedMediaDropdownMenu(
                 .padding(16.dp)
         ) {
             ItemOptionMenu(
-                title = R.string.library_save_externally,
+                title = R.string.downloads_save_externally,
                 icon = R.drawable.ic_public,
                 onClick = {
                     onSave()
@@ -77,7 +77,7 @@ fun DownloadedMediaDropdownMenu(
                 }
             )
             ItemOptionMenu(
-                title = R.string.library_share,
+                title = R.string.downloads_share,
                 icon = R.drawable.share,
                 onClick = {
                     onShare()
@@ -85,7 +85,7 @@ fun DownloadedMediaDropdownMenu(
                 }
             )
             ItemOptionMenu(
-                title = R.string.library_play,
+                title = R.string.downloads_play,
                 icon = R.drawable.play,
                 onClick = {
                     onPlay()
@@ -93,7 +93,7 @@ fun DownloadedMediaDropdownMenu(
                 }
             )
             ItemOptionMenu(
-                title = R.string.library_delete,
+                title = R.string.downloads_delete,
                 icon = R.drawable.delete,
                 onClick = {
                     onDelete()
@@ -112,7 +112,8 @@ fun ItemOptionMenu(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.clickable(onClick = onClick)
     ) {
         Icon(
             painter = painterResource(id = icon),
@@ -128,7 +129,6 @@ fun ItemOptionMenu(
                 .background(Color.White, shape = RoundedCornerShape(8.dp))
                 .weight(1f)
                 .wrapContentHeight()
-                .clickable(onClick = onClick)
                 .padding(vertical = 4.dp, horizontal = 8.dp),
             textAlign = TextAlign.Start
         )

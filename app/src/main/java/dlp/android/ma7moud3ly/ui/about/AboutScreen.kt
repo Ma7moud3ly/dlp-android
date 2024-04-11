@@ -8,13 +8,13 @@ import dlp.android.ma7moud3ly.managers.DownloadManager
 
 
 @Composable
-fun SettingsScreen() {
+fun AboutScreen() {
     val activity = LocalContext.current as Activity
     val downloadManager = remember { DownloadManager.instance }
     val dlpVersion = remember { downloadManager.dlpVersion() }
 
 
-    SettingsScreenContent(
+    AboutScreenContent(
         dlpVersion = dlpVersion,
         onOpenRepo = {
             try {

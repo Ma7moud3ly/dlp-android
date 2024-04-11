@@ -35,9 +35,9 @@ import dlp.android.ma7moud3ly.ui.appTheme.borderColor
 
 @Preview
 @Composable
-private fun SettingsScreenPreview() {
+private fun AboutScreenPreview() {
     AppTheme {
-        SettingsScreenContent(
+        AboutScreenContent(
             dlpVersion = "stable 2024.03.10",
             onOpenRepo = {}
         )
@@ -45,7 +45,7 @@ private fun SettingsScreenPreview() {
 }
 
 @Composable
-fun SettingsScreenContent(
+fun AboutScreenContent(
     dlpVersion: String,
     onOpenRepo: () -> Unit
 ) {
@@ -99,7 +99,7 @@ fun SettingsScreenContent(
                 }
             }
             Text(
-                text = stringResource(id = R.string.settings_report),
+                text = stringResource(id = R.string.about_repo),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colorScheme.primary,

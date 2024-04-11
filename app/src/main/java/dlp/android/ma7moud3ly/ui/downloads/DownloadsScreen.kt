@@ -7,17 +7,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dlp.android.ma7moud3ly.MainActivity
 import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.LibraryEvents
+import dlp.android.ma7moud3ly.data.DownloadsEvents
 import dlp.android.ma7moud3ly.managers.LibraryManager
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import kotlinx.coroutines.launch
 
 
-private const val TAG = "LibraryScreen"
+private const val TAG = "DownloadsScreen"
 
 
 @Composable
-fun LibraryScreen() {
+fun DownloadsScreen() {
     val activity = LocalContext.current as MainActivity
     val viewModel: MainViewModel = viewModel(activity)
     val downloadList = remember { viewModel.downloadList }
@@ -36,14 +36,14 @@ fun LibraryScreen() {
         if (downloadList.isEmpty()) updateMediaList()
     }
 
-    val action: (LibraryEvents) -> Unit = {
+    val action: (DownloadsEvents) -> Unit = {
         when (it) {
-            is LibraryEvents.DeleteAll -> {
+            is DownloadsEvents.DeleteAll -> {
                 libraryManager.deleteAllFiles()
                 updateMediaList()
             }
 
-            is LibraryEvents.SaveExternally -> {
+            is DownloadsEvents.SaveExternally -> {
                 val file = it.mediaFile
                 coroutineScope.launch {
                     val moved = libraryManager.moveMediaFileToPublicDownloads(file)
@@ -51,7 +51,7 @@ fun LibraryScreen() {
                         updateMediaList()
                         viewModel.snackbarMessage.emit(
                             activity.getString(
-                                R.string.library_saved_externally,
+                                R.string.downloads_saved_externally,
                                 file.name
                             )
                         )
@@ -59,22 +59,22 @@ fun LibraryScreen() {
                 }
             }
 
-            is LibraryEvents.Share -> {
+            is DownloadsEvents.Share -> {
                 libraryManager.shareMediaFile(it.mediaFile)
             }
 
-            is LibraryEvents.Play -> {
+            is DownloadsEvents.Play -> {
                 libraryManager.playMediaFile(it.mediaFile)
             }
 
-            is LibraryEvents.Delete -> {
+            is DownloadsEvents.Delete -> {
                 if (it.mediaFile.delete()) updateMediaList()
             }
         }
     }
 
     AppTheme {
-        LibraryScreenContent(
+        DownloadsScreenContent(
             downloads = downloadList,
             action = action
         )

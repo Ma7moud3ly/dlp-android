@@ -1,8 +1,8 @@
 package dlp.android.ma7moud3ly.ui
 
-import DownloaderScreen
-import SettingsScreen
-import LibraryScreen
+import HomeScreen
+import AboutScreen
+import DownloadsScreen
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -45,19 +45,19 @@ import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 
-private const val TAG = "HomeScreen"
+private const val TAG = "TabsScreen"
 
 @Preview
 @Composable
 private fun HomeScreenPreview() {
     AppTheme {
-        HomeScreen()
+        TabsScreen()
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen() {
+fun TabsScreen() {
     val activity = LocalContext.current as MainActivity
     val viewModel: MainViewModel = viewModel(activity)
     val snackarHostState = remember { SnackbarHostState() }
@@ -175,21 +175,21 @@ private fun BottomBar(
 private val appTabs = listOf(
     MyTab(
         id = 0,
-        title = R.string.tab_downloader,
+        title = R.string.tab_home,
         icon = R.drawable.download,
-        screen = { DownloaderScreen() }
+        screen = { HomeScreen() }
     ),
     MyTab(
         id = 1,
-        title = R.string.tab_videos,
+        title = R.string.tab_downloads,
         icon = R.drawable.videos,
-        screen = { LibraryScreen() }
+        screen = { DownloadsScreen() }
     ),
     MyTab(
         id = 2,
-        title = R.string.tab_settings,
+        title = R.string.tab_about,
         icon = R.drawable.settings,
-        screen = { SettingsScreen() }
+        screen = { AboutScreen() }
     )
 )
 

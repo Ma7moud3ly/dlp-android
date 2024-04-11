@@ -37,25 +37,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dlp.android.ma7moud3ly.R
 import dlp.android.ma7moud3ly.data.DownloadInfo
-import dlp.android.ma7moud3ly.data.LibraryEvents
+import dlp.android.ma7moud3ly.data.DownloadsEvents
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
-import dlp.android.ma7moud3ly.ui.library.menus.DownloadedMediaDropdownMenu
-import dlp.android.ma7moud3ly.ui.library.menus.LibraryDropdownMenu
+import dlp.android.ma7moud3ly.ui.downloads.menus.DownloadedMediaDropdownMenu
+import dlp.android.ma7moud3ly.ui.downloads.menus.DownloadsDropdownMenu
 import java.io.File
 
 private const val TAG = "VideosScreen"
 
 @Preview
 @Composable
-private fun VideosScreenPreview() {
+private fun DownloadsScreenPreview() {
     val downloads = listOf(
         DownloadInfo(file = File("Video 1.mp4")),
         DownloadInfo(file = File("Video 2.mp4")),
         DownloadInfo(file = File("Video 3.mp4"))
     )
     AppTheme {
-        LibraryScreenContent(
+        DownloadsScreenContent(
             downloads = downloads,
             action = {}
         )
@@ -64,9 +64,9 @@ private fun VideosScreenPreview() {
 
 
 @Composable
-fun LibraryScreenContent(
+fun DownloadsScreenContent(
     downloads: List<DownloadInfo>,
-    action: (LibraryEvents) -> Unit
+    action: (DownloadsEvents) -> Unit
 ) {
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
@@ -89,7 +89,7 @@ fun LibraryScreenContent(
 }
 
 @Composable
-private fun SectionHeader(action: (LibraryEvents) -> Unit) {
+private fun SectionHeader(action: (DownloadsEvents) -> Unit) {
     var showOptionsMenu by remember { mutableStateOf(false) }
     Surface(color = Color.White) {
         Row(
@@ -100,7 +100,7 @@ private fun SectionHeader(action: (LibraryEvents) -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                text = stringResource(id = R.string.library_downloads),
+                text = stringResource(id = R.string.downloads),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.weight(1f)
@@ -114,10 +114,10 @@ private fun SectionHeader(action: (LibraryEvents) -> Unit) {
                         .size(24.dp)
                         .clickable { showOptionsMenu = showOptionsMenu.not() }
                 )
-                LibraryDropdownMenu(
+                DownloadsDropdownMenu(
                     expanded = { showOptionsMenu },
                     onDismiss = { showOptionsMenu = false },
-                    onDeleteAll = { action(LibraryEvents.DeleteAll) },
+                    onDeleteAll = { action(DownloadsEvents.DeleteAll) },
                 )
             }
         }
@@ -128,7 +128,7 @@ private fun SectionHeader(action: (LibraryEvents) -> Unit) {
 @Composable
 private fun ItemVideo(
     downloadInfo: DownloadInfo,
-    action: (LibraryEvents) -> Unit
+    action: (DownloadsEvents) -> Unit
 ) {
     var showOptionsMenu by remember { mutableStateOf(false) }
 
@@ -199,10 +199,10 @@ private fun ItemVideo(
                 DownloadedMediaDropdownMenu(
                     expanded = { showOptionsMenu },
                     onDismiss = { showOptionsMenu = false },
-                    onSave = { action(LibraryEvents.SaveExternally(downloadInfo.file)) },
-                    onShare = { action(LibraryEvents.Share(downloadInfo.file)) },
-                    onPlay = { action(LibraryEvents.Play(downloadInfo.file)) },
-                    onDelete = { action(LibraryEvents.Delete(downloadInfo.file)) }
+                    onSave = { action(DownloadsEvents.SaveExternally(downloadInfo.file)) },
+                    onShare = { action(DownloadsEvents.Share(downloadInfo.file)) },
+                    onPlay = { action(DownloadsEvents.Play(downloadInfo.file)) },
+                    onDelete = { action(DownloadsEvents.Delete(downloadInfo.file)) }
                 )
             }
         }
@@ -213,7 +213,7 @@ private fun ItemVideo(
 private fun SectionNoDownloads() {
     Box(Modifier.fillMaxSize()) {
         Text(
-            text = stringResource(id = R.string.library_empty),
+            text = stringResource(id = R.string.downloads_empty),
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Light,
             color = MaterialTheme.colorScheme.primary,

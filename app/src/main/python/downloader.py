@@ -1,16 +1,18 @@
-from yt_dlp import YoutubeDL, DownloadError,version
+from yt_dlp import YoutubeDL, DownloadError, version
 import ctypes
 import threading
 import inspect
 import ctypes
 
 
-# Handle download process in a seprate thread 
- 
+# Handle download process in a seprate thread
+
 thread1 = None
 
 # Kill the runnig thread
 # https://github.com/chaquo/chaquopy/issues/58
+
+
 def _async_raise(tid, exctype):
     tid = ctypes.c_long(tid)
     if not inspect.isclass(exctype):
@@ -29,11 +31,15 @@ def stop_thread(thread):
 
 # Public callback methods being overrided by Android code
 # to observe download progress and error messages
+
+
 def download_progress(downloaded, total, percent):
     pass
 
+
 def download_complete():
     pass
+
 
 def download_error(msg):
     pass
@@ -41,7 +47,8 @@ def download_error(msg):
 
 # Get yt-dlp version
 def dlp_version():
-    return "yt-dlp %s %s"%(version.CHANNEL,version._pkg_version)
+    return "yt-dlp %s %s" % (version.CHANNEL, version._pkg_version)
+
 
 def dlp_update():
     pass
@@ -50,9 +57,12 @@ def dlp_update():
 # YTDL functions
 #########################
 
+
 allowed_codecs = ["mp4", "webm", "mp3", "mkv", "avi", "m4a"]
 
 # Check if video title is a valid file name to save file with.
+
+
 def isValidName(filename):
     try:
         x = open(filename, "w")
@@ -62,7 +72,9 @@ def isValidName(filename):
         return False
     return True
 
-# Download progress callback 
+# Download progress callback
+
+
 def my_hook(d):
     if d['status'] == 'downloading':
         downloaded = int(d['downloaded_bytes']
@@ -74,7 +86,9 @@ def my_hook(d):
             percent = round(downloaded/total*100, 1)
             download_progress(downloaded, total, percent)
 
-# Get video info (title,thumbnail,description and formats)  
+# Get video info (title,thumbnail,description and formats)
+
+
 def getInfo(url):
     options = {'format': 'best'}
     with YoutubeDL(options) as ydl:
@@ -125,18 +139,22 @@ def getInfo(url):
         return info
 
 # Download a video with ydl-dl
+
+
 def _download(url, format_id, path, title):
     valid = isValidName(path+"/"+title)
     print("valid name", valid)
     outtmpl = "/%(title)s.%(ext)s" if valid else "/%(id)s.%(ext)s"
     options = {
         "progress_hooks": [my_hook],
-        'format': format_id,
         'warnings': 'no-warnings',
         "outtmpl": path+outtmpl,
         'noplaylist': True,
         'listformats': False,
     }
+    if format_id != '':
+        options['format'] = format_id
+
     with YoutubeDL(options) as ydl:
         try:
             ydl.download([url])

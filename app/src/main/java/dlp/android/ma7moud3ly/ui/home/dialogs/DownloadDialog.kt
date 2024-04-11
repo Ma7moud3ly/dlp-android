@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui.download.dialogs
+package dlp.android.ma7moud3ly.ui.home.dialogs
 
 import ButtonSmall
 import android.util.Log
@@ -153,9 +153,10 @@ fun DownloadDialog(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     ButtonSmall(
-                        text = stringResource(id = R.string.download_stop),
+                        text = stringResource(id = R.string.download_cancel),
                         background = MaterialTheme.colorScheme.primary,
-                        onClick = onStopDownload
+                        onClick = onStopDownload,
+                        fillMaxWidth = true
                     )
                 }
             }
