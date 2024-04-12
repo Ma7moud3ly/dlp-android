@@ -35,7 +35,8 @@ import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 private fun MediaDropdownMenuPreview() {
     AppTheme {
         DownloadedMediaDropdownMenu(
-            expanded = { true }
+            expanded = { true },
+            canPlay = true
         )
     }
 }
@@ -43,8 +44,9 @@ private fun MediaDropdownMenuPreview() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DownloadedMediaDropdownMenu(
-    onDismiss: () -> Unit = {},
+    canPlay: Boolean,
     expanded: () -> Boolean = { false },
+    onDismiss: () -> Unit = {},
     onSave: () -> Unit = {},
     onShare: () -> Unit = {},
     onPlay: () -> Unit = {},
@@ -84,7 +86,7 @@ fun DownloadedMediaDropdownMenu(
                     onDismiss()
                 }
             )
-            ItemOptionMenu(
+            if (canPlay) ItemOptionMenu(
                 title = R.string.downloads_play,
                 icon = R.drawable.play,
                 onClick = {

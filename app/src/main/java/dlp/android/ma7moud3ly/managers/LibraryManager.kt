@@ -125,7 +125,11 @@ class LibraryManager private constructor(
             .filter { file -> mediaExt.any { file.name.endsWith(it) } }
             // convert list to DownloadInfo list to display in LibraryScreen
             .map { f ->
-                DownloadInfo(file = f, thumbnail = getVideoThumbnail(f.path))
+                DownloadInfo(
+                    file = f,
+                    thumbnail = getVideoThumbnail(f.path),
+                    canPlay = canPlay(f)
+                )
             }
             .sortedByDescending {
                 Files.readAttributes(
@@ -166,6 +170,11 @@ class LibraryManager private constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun canPlay(mediaFile: File): Boolean {
+        val intent = createShareIntentForFile(mediaFile, Intent.ACTION_VIEW)
+        return activity.packageManager.resolveActivity(intent, 0) != null
     }
 
     /**

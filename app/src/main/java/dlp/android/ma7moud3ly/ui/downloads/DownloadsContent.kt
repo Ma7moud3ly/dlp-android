@@ -197,6 +197,7 @@ private fun ItemVideo(
                         .clickable { showOptionsMenu = showOptionsMenu.not() }
                 )
                 DownloadedMediaDropdownMenu(
+                    canPlay = downloadInfo.canPlay,
                     expanded = { showOptionsMenu },
                     onDismiss = { showOptionsMenu = false },
                     onSave = { action(DownloadsEvents.SaveExternally(downloadInfo.file)) },

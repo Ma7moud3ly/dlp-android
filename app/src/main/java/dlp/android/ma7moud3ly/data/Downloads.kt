@@ -14,7 +14,8 @@ data class DownloadProgress(
  */
 data class DownloadInfo(
     val file: File = File(""),
-    val thumbnail: Bitmap? = null
+    val thumbnail: Bitmap? = null,
+    val canPlay: Boolean = false
 ) {
     val size: Double get() = file.length().toInt().toMega
     val name: String get() = file.name

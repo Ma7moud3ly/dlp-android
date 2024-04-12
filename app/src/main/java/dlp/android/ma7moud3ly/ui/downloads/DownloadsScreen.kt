@@ -12,9 +12,7 @@ import dlp.android.ma7moud3ly.managers.LibraryManager
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import kotlinx.coroutines.launch
 
-
 private const val TAG = "DownloadsScreen"
-
 
 @Composable
 fun DownloadsScreen() {
