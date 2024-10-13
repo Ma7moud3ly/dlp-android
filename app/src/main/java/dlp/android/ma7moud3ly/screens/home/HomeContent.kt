@@ -62,8 +62,8 @@ import dlp.android.ma7moud3ly.data.MediaFormat
 import dlp.android.ma7moud3ly.data.MediaInfo
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
-import dlp.android.ma7moud3ly.ui.home.dialogs.DownloadDialog
-import dlp.android.ma7moud3ly.ui.home.dialogs.ProgressDialog
+import dlp.android.ma7moud3ly.screens.home.dialogs.DownloadDialog
+import dlp.android.ma7moud3ly.screens.home.dialogs.ProgressDialog
 import java.util.Locale
 
 @Preview(showSystemUi = true)

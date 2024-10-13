@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.chaquo.python)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
@@ -14,8 +15,8 @@ android {
         applicationId = "dlp.android.ma7moud3ly"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -47,9 +48,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.compose.compiler.get().version.toString()
     }
     packaging {
         resources {

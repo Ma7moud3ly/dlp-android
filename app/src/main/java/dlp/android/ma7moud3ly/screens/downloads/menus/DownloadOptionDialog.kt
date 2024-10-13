@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui.downloads.menus
+package dlp.android.ma7moud3ly.screens.downloads.menus
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

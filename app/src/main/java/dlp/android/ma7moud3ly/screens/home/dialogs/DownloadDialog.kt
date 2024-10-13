@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui.home.dialogs
+package dlp.android.ma7moud3ly.screens.home.dialogs
 
 import ButtonSmall
 import android.util.Log

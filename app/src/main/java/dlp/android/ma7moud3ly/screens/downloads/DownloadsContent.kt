@@ -40,8 +40,8 @@ import dlp.android.ma7moud3ly.data.DownloadInfo
 import dlp.android.ma7moud3ly.data.DownloadsEvents
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
-import dlp.android.ma7moud3ly.ui.downloads.menus.DownloadedMediaDropdownMenu
-import dlp.android.ma7moud3ly.ui.downloads.menus.DownloadsDropdownMenu
+import dlp.android.ma7moud3ly.screens.downloads.menus.DownloadedMediaDropdownMenu
+import dlp.android.ma7moud3ly.screens.downloads.menus.DownloadsDropdownMenu
 import java.io.File
 
 private const val TAG = "VideosScreen"
