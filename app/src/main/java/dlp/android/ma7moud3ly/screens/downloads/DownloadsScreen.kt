@@ -1,7 +1,10 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dlp.android.ma7moud3ly.MainActivity
@@ -9,8 +12,9 @@ import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
 import dlp.android.ma7moud3ly.data.DownloadsEvents
 import dlp.android.ma7moud3ly.managers.LibraryManager
-import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
+import dlp.android.ma7moud3ly.screens.downloads.menus.DeleteConfirmDialog
 import kotlinx.coroutines.launch
+import java.io.File
 
 private const val TAG = "DownloadsScreen"
 
@@ -18,6 +22,8 @@ private const val TAG = "DownloadsScreen"
 fun DownloadsScreen() {
     val activity = LocalContext.current as MainActivity
     val viewModel: MainViewModel = viewModel(activity)
+    var showFileDelete by remember { mutableStateOf(false) }
+    var selectedFile by remember { mutableStateOf<File?>(null) }
     val downloadList = remember { viewModel.downloadList }
     val libraryManager = remember { LibraryManager.instance }
     val coroutineScope = rememberCoroutineScope()
@@ -34,7 +40,14 @@ fun DownloadsScreen() {
         if (downloadList.isEmpty()) updateMediaList()
     }
 
-    val action: (DownloadsEvents) -> Unit = {
+    DeleteConfirmDialog(
+        file = { selectedFile!! },
+        show = { showFileDelete && selectedFile != null },
+        onDismiss = { showFileDelete = false },
+        onApprove = { if (selectedFile?.delete() == true) updateMediaList() }
+    )
+
+    fun events(it: DownloadsEvents) {
         when (it) {
             is DownloadsEvents.DeleteAll -> {
                 libraryManager.deleteAllFiles()
@@ -66,16 +79,15 @@ fun DownloadsScreen() {
             }
 
             is DownloadsEvents.Delete -> {
-                if (it.mediaFile.delete()) updateMediaList()
+                selectedFile = it.mediaFile
+                showFileDelete = true
             }
         }
     }
 
-    AppTheme {
-        DownloadsScreenContent(
-            downloads = downloadList,
-            action = action
-        )
-    }
+    DownloadsScreenContent(
+        downloads = downloadList,
+        action = ::events
+    )
 }
 

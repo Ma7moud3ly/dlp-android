@@ -27,9 +27,11 @@
     <string name="downloads_share">Share</string>
     <string name="downloads_play">Play</string>
     <string name="downloads_delete">Delete</string>
+    <string name="downloads_delete_msg">Do you want to delete (%s) ?</string>
     <string name="downloads_delete_all">Delete All</string>
     <string name="downloads_empty">No downloads yet!</string>
 
     <string name="about_repo">(github/dlp-android) For suggestions or bug reporting</string>
-
+    <string name="msg_yes">Yes</string>
+    <string name="msg_no">No</string>
 </resources>

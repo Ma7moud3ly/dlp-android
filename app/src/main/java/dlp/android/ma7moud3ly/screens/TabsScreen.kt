@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.ui
+package dlp.android.ma7moud3ly.screens
 
 import HomeScreen
 import AboutScreen
@@ -55,7 +55,6 @@ private fun HomeScreenPreview() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabsScreen() {
     val activity = LocalContext.current as MainActivity
