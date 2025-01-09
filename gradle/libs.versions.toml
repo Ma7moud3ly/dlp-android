@@ -1,25 +1,25 @@
 [versions]
-agp = "8.5.0-alpha03"
-firebaseBom = "32.8.0"
-kotlin = "1.9.23"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
+agp = "8.7.3"
+firebaseBom = "33.7.0"
+kotlin = "2.0.21"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.9.3"
 coreSplashscreen = "1.0.1"
-lifecycleViewmodelCompose = "2.7.0"
+lifecycleViewmodelCompose = "2.8.7"
 
-composeBom = "2024.04.00"
-composeCompiler = "1.5.11"
-coil = "2.6.0"
+composeBom = "2024.12.01"
+composeCompiler = "1.5.15"
+coil = "2.7.0"
 
 chaquoPython = "15.0.1"
 gsonVersion = "2.10.1"
-googleServices = "4.4.1"
-crashlytics = "2.9.9"
+googleServices = "4.4.2"
+crashlytics = "3.0.2"
 
-coreKtx = "1.12.0"
+coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +51,7 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 chaquo-python = { id = "com.chaquo.python", version.ref = "chaquoPython" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
