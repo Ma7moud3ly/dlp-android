@@ -1,22 +1,21 @@
 [versions]
-agp = "8.7.3"
-firebaseBom = "33.7.0"
-kotlin = "2.0.21"
+agp = "8.9.1"
+firebaseBom = "33.12.0"
+kotlin = "2.1.20"
 lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
+activityCompose = "1.10.1"
 coreSplashscreen = "1.0.1"
 lifecycleViewmodelCompose = "2.8.7"
 
-composeBom = "2024.12.01"
-composeCompiler = "1.5.15"
+composeBom = "2025.04.00"
 coil = "2.7.0"
 
-chaquoPython = "15.0.1"
-gsonVersion = "2.10.1"
+chaquoPython = "16.0.0"
+gsonVersion = "2.13.0"
 googleServices = "4.4.2"
-crashlytics = "3.0.2"
+crashlytics = "3.0.3"
 
-coreKtx = "1.15.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -37,7 +36,6 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
