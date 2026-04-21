@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.chaquo.python)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "dlp.android.ma7moud3ly"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dlp.android.ma7moud3ly"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 4
-        versionName = "2.0"
+        versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
