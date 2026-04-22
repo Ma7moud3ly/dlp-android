@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dlp.android.ma7moud3ly.managers.DownloadManager
 import dlp.android.ma7moud3ly.managers.LibraryManager
-import dlp.android.ma7moud3ly.screens.TabsScreen
+import dlp.android.ma7moud3ly.screens.MainScreen
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 
 
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         initManagers()
         setContent {
             AppTheme {
-                TabsScreen()
+                MainScreen(viewModel)
             }
         }
     }

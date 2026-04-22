@@ -1,12 +1,10 @@
 package dlp.android.ma7moud3ly.screens
 
-import HomeScreen
-import AboutScreen
-import DownloadsScreen
+import dlp.android.ma7moud3ly.screens.home.HomeScreen
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,42 +24,37 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import dlp.android.ma7moud3ly.MainActivity
 import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
+import dlp.android.ma7moud3ly.screens.about.AboutScreen
+import dlp.android.ma7moud3ly.screens.downloads.DownloadsScreen
+import kotlinx.coroutines.launch
 
 private const val TAG = "TabsScreen"
 
-@Preview
 @Composable
-private fun HomeScreenPreview() {
-    AppTheme {
-        TabsScreen()
-    }
-}
-
-@Composable
-fun TabsScreen() {
-    val activity = LocalContext.current as MainActivity
-    val viewModel: MainViewModel = viewModel(activity)
+fun MainScreen(viewModel: MainViewModel) {
+    val coroutineScope = rememberCoroutineScope()
     val snackarHostState = remember { SnackbarHostState() }
-    var selectedTab by remember { mutableStateOf(appTabs[0]) }
     val pagerState = rememberPagerState(pageCount = { appTabs.size })
+
+    BackHandler {
+        val currentPage = pagerState.settledPage
+        if (currentPage > 0) {
+            coroutineScope.launch {
+                pagerState.scrollToPage(currentPage - 1)
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.snackbarMessage.collect { msg ->
@@ -77,19 +70,15 @@ fun TabsScreen() {
         }
     }
 
-    LaunchedEffect(pagerState.settledPage) {
-        selectedTab = when (pagerState.settledPage) {
-            0 -> appTabs[0]
-            1 -> appTabs[1]
-            else -> appTabs[2]
-        }
-    }
-
     Scaffold(
         bottomBar = {
             BottomBar(
-                onTabSelected = { selectedTab = it },
-                selectedTab = { selectedTab }
+                onSelectPage = { page ->
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(page)
+                    }
+                },
+                selectedPage = { pagerState.settledPage }
             )
         },
         snackbarHost = {
@@ -102,8 +91,12 @@ fun TabsScreen() {
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
         ) {
-            HorizontalPager(state = pagerState, userScrollEnabled = false) {
-                selectedTab.screen()
+            HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
+                when (page) {
+                    0 -> HomeScreen()
+                    1 -> DownloadsScreen()
+                    2 -> AboutScreen()
+                }
             }
         }
     }
@@ -115,9 +108,10 @@ fun TabsScreen() {
  */
 @Composable
 private fun BottomBar(
-    onTabSelected: (MyTab) -> Unit,
-    selectedTab: () -> MyTab
+    onSelectPage: (Int) -> Unit,
+    selectedPage: () -> Int
 ) {
+    val selectedPage = selectedPage()
     Box(Modifier.background(color = MaterialTheme.colorScheme.background)) {
         NavigationBar(
             containerColor = Color.White,
@@ -134,12 +128,12 @@ private fun BottomBar(
         ) {
             appTabs.forEach { tab ->
                 val title = stringResource(id = tab.title)
-                val isSelected = selectedTab().id == tab.id
+                val isSelected = selectedPage == tab.id
                 val itemColor = if (isSelected) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.secondary
                 NavigationBarItem(
                     selected = isSelected,
-                    onClick = { onTabSelected(tab) },
+                    onClick = { onSelectPage(tab.id) },
                     label = {
                         Text(
                             text = title,
@@ -175,26 +169,22 @@ private val appTabs = listOf(
     MyTab(
         id = 0,
         title = R.string.tab_home,
-        icon = R.drawable.download,
-        screen = { HomeScreen() }
+        icon = R.drawable.download
     ),
     MyTab(
         id = 1,
         title = R.string.tab_downloads,
-        icon = R.drawable.videos,
-        screen = { DownloadsScreen() }
+        icon = R.drawable.videos
     ),
     MyTab(
         id = 2,
         title = R.string.tab_about,
-        icon = R.drawable.settings,
-        screen = { AboutScreen() }
+        icon = R.drawable.settings
     )
 )
 
 data class MyTab(
     val id: Int,
     @StringRes val title: Int,
-    @DrawableRes val icon: Int,
-    val screen: @Composable () -> Unit
+    @DrawableRes val icon: Int
 )

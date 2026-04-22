@@ -2,16 +2,12 @@ from yt_dlp import YoutubeDL, DownloadError, version
 import ctypes
 import threading
 import inspect
-import ctypes
-
 
 # Handle download process in a seprate thread
-
 thread1 = None
 
-# Kill the runnig thread
+# Kill the running thread
 # https://github.com/chaquo/chaquopy/issues/58
-
 
 def _async_raise(tid, exctype):
     tid = ctypes.c_long(tid)
@@ -31,7 +27,6 @@ def stop_thread(thread):
 
 # Public callback methods being overrided by Android code
 # to observe download progress and error messages
-
 
 def download_progress(downloaded, total, percent):
     pass
@@ -80,11 +75,16 @@ def my_hook(d):
         downloaded = int(d['downloaded_bytes']
                          if 'downloaded_bytes' in d else '0')
         total = int(d['total_bytes'] if 'total_bytes' in d else '0')
+        
+        # We use .invoke() to call the Kotlin function references to avoid 
+        # ambiguity when the object implements multiple functional interfaces.
+        callback = getattr(download_progress, "invoke", download_progress)
+        
         if total == 0:
-            download_progress(downloaded, 0, 0)
+            callback(downloaded, 0, 0)
         else:
             percent = round(downloaded/total*100, 1)
-            download_progress(downloaded, total, percent)
+            callback(downloaded, total, percent)
 
 # Get video info (title,thumbnail,description and formats)
 
@@ -158,9 +158,9 @@ def _download(url, format_id, path, title):
     with YoutubeDL(options) as ydl:
         try:
             ydl.download([url])
-            download_complete()
+            getattr(download_complete, "invoke", download_complete)()
         except DownloadError as e:
-            download_error(e)
+            getattr(download_error, "invoke", download_error)(str(e))
 
 
 # start download in a new thread

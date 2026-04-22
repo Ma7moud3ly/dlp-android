@@ -1,3 +1,6 @@
+package dlp.android.ma7moud3ly.screens.downloads
+
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -5,12 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dlp.android.ma7moud3ly.MainActivity
 import dlp.android.ma7moud3ly.MainViewModel
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadsEvents
+import dlp.android.ma7moud3ly.model.DownloadsEvents
 import dlp.android.ma7moud3ly.managers.LibraryManager
 import dlp.android.ma7moud3ly.screens.downloads.menus.DeleteConfirmDialog
 import kotlinx.coroutines.launch
@@ -20,7 +22,7 @@ private const val TAG = "DownloadsScreen"
 
 @Composable
 fun DownloadsScreen() {
-    val activity = LocalContext.current as MainActivity
+    val activity = LocalActivity.current as MainActivity
     val viewModel: MainViewModel = viewModel(activity)
     var showFileDelete by remember { mutableStateOf(false) }
     var selectedFile by remember { mutableStateOf<File?>(null) }

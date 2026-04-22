@@ -6,9 +6,9 @@ import com.chaquo.python.PyObject
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import com.google.gson.Gson
-import dlp.android.ma7moud3ly.data.DownloadProgress
-import dlp.android.ma7moud3ly.data.MediaInfo
-import dlp.android.ma7moud3ly.data.toMega
+import dlp.android.ma7moud3ly.model.DownloadProgress
+import dlp.android.ma7moud3ly.model.MediaInfo
+import dlp.android.ma7moud3ly.model.toMega
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext

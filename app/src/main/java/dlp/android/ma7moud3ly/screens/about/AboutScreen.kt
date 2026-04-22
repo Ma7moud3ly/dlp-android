@@ -1,15 +1,17 @@
+package dlp.android.ma7moud3ly.screens.about
+
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import dlp.android.ma7moud3ly.managers.DownloadManager
+import androidx.core.net.toUri
 
 
 @Composable
 fun AboutScreen() {
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current as Activity
     val downloadManager = remember { DownloadManager.instance }
     val dlpVersion = remember { downloadManager.dlpVersion() }
 
@@ -19,7 +21,7 @@ fun AboutScreen() {
         onOpenRepo = {
             try {
                 val url = "https://github.com/Ma7moud3ly/dlp-android"
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
                 activity.startActivity(browserIntent)
             } catch (e: Exception) {
                 e.printStackTrace()

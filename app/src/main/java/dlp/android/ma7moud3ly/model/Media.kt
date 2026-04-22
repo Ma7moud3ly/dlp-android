@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.data
+package dlp.android.ma7moud3ly.model
 
 import com.google.gson.annotations.SerializedName
 

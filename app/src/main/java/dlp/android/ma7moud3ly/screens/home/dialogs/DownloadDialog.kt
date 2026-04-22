@@ -1,6 +1,5 @@
 package dlp.android.ma7moud3ly.screens.home.dialogs
 
-import ButtonSmall
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -31,9 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadProgress
-import dlp.android.ma7moud3ly.data.MediaFormat
-import dlp.android.ma7moud3ly.data.MediaInfo
+import dlp.android.ma7moud3ly.model.DownloadProgress
+import dlp.android.ma7moud3ly.model.MediaFormat
+import dlp.android.ma7moud3ly.model.MediaInfo
+import dlp.android.ma7moud3ly.screens.home.ButtonSmall
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

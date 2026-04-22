@@ -1,4 +1,4 @@
-package dlp.android.ma7moud3ly.data
+package dlp.android.ma7moud3ly.model
 
 import java.io.File
 
@@ -8,7 +8,6 @@ sealed class HomeEvents {
     data class OnPlay(val format: MediaFormat) : HomeEvents()
     data class OnDownload(val format: MediaFormat) : HomeEvents()
     data object OnDownloadBest : HomeEvents()
-
     data object OnStopDownload : HomeEvents()
     data object OnClearMedia : HomeEvents()
 }

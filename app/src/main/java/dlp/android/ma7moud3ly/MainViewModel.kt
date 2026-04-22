@@ -3,8 +3,8 @@ package dlp.android.ma7moud3ly
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import dlp.android.ma7moud3ly.data.DownloadInfo
-import dlp.android.ma7moud3ly.data.MediaInfo
+import dlp.android.ma7moud3ly.model.DownloadInfo
+import dlp.android.ma7moud3ly.model.MediaInfo
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class MainViewModel : ViewModel() {

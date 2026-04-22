@@ -1,3 +1,5 @@
+package dlp.android.ma7moud3ly.screens.downloads
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadInfo
-import dlp.android.ma7moud3ly.data.DownloadsEvents
+import dlp.android.ma7moud3ly.model.DownloadInfo
+import dlp.android.ma7moud3ly.model.DownloadsEvents
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
 import dlp.android.ma7moud3ly.screens.downloads.menus.DownloadedMediaDropdownMenu

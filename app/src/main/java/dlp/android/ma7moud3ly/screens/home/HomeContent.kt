@@ -1,3 +1,5 @@
+package dlp.android.ma7moud3ly.screens.home
+
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -56,17 +58,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadProgress
-import dlp.android.ma7moud3ly.data.HomeEvents
-import dlp.android.ma7moud3ly.data.MediaFormat
-import dlp.android.ma7moud3ly.data.MediaInfo
+import dlp.android.ma7moud3ly.model.DownloadProgress
+import dlp.android.ma7moud3ly.model.HomeEvents
+import dlp.android.ma7moud3ly.model.MediaFormat
+import dlp.android.ma7moud3ly.model.MediaInfo
 import dlp.android.ma7moud3ly.ui.appTheme.AppTheme
 import dlp.android.ma7moud3ly.ui.appTheme.borderColor
 import dlp.android.ma7moud3ly.screens.home.dialogs.DownloadDialog
 import dlp.android.ma7moud3ly.screens.home.dialogs.ProgressDialog
 import java.util.Locale
 
-@Preview(showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun DownloaderScreenPreview() {
     val formats = listOf(
@@ -107,7 +109,7 @@ private fun DownloaderScreenPreview() {
 
 
 @Composable
-fun HomeScreenContent(
+internal fun HomeScreenContent(
     isLoading: () -> Boolean,
     mediaInfo: () -> MediaInfo?,
     downloadProgress: () -> DownloadProgress,

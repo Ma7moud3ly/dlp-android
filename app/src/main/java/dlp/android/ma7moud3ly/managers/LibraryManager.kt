@@ -15,8 +15,8 @@ import android.util.Size
 import androidx.core.content.FileProvider
 import com.google.gson.Gson
 import dlp.android.ma7moud3ly.R
-import dlp.android.ma7moud3ly.data.DownloadInfo
-import dlp.android.ma7moud3ly.data.MediaInfo
+import dlp.android.ma7moud3ly.model.DownloadInfo
+import dlp.android.ma7moud3ly.model.MediaInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

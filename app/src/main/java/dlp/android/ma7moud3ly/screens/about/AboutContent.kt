@@ -1,3 +1,5 @@
+package dlp.android.ma7moud3ly.screens.about
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
